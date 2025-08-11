@@ -48,6 +48,31 @@ const links = [
 /** Local UI state: collapse toggle for the helpful links section */
 const linksOpen = ref(false)
 const toggleLinks = () => { linksOpen.value = !linksOpen.value }
+
+const legend = [
+  { 
+    color: 'green',  
+    title: 'Green',  
+    desc: 'Excellent choice for eco-friendly travel: Right next to public transport, making it easy to walk, save time, and cut carbon emissions.' 
+  },
+  { 
+    color: 'yellow', 
+    title: 'Yellow', 
+    desc: 'Good choice for greener travel: A short walk to public transport, helping reduce driving and supporting a healthier lifestyle.' 
+  },
+  { 
+    color: 'red',    
+    title: 'Red',    
+    desc: 'Less ideal for green travel: Far from public transport, likely requiring more driving and producing more emissions.' 
+  },
+  { 
+    color: 'grey',   
+    title: 'Grey',   
+    desc: 'Public transport access unknown: Location data is limited or unavailable.' 
+  }
+];
+
+
 </script>
 
 <template>
@@ -131,6 +156,23 @@ const toggleLinks = () => { linksOpen.value = !linksOpen.value }
           </transition>
         </div>
         <!-- end collapsible -->
+         <!-- Legend: what the pills mean -->
+        <section class="legend" aria-labelledby="legend-title">
+          <h4 id="legend-title" class="legend-title">What do the colors mean?</h4>
+          <ul class="legend-list">
+            <li v-for="i in legend" :key="i.color" class="legend-item">
+              <span class="pill-dot" :class="i.color" aria-hidden="true"></span>
+              <div class="legend-content">
+                <div class="legend-line">
+                  <strong class="legend-badge">{{ i.title }}</strong>
+                </div>
+                <div class="legend-desc">{{ i.desc }}</div>
+              </div>
+            </li>
+          </ul>
+
+
+        </section>
       </div>
     </aside>
   </transition>
@@ -300,4 +342,98 @@ const toggleLinks = () => { linksOpen.value = !linksOpen.value }
 .pill.yellow { background-color: rgba(255, 215, 0, 0.35); }
 .pill.red { background-color: rgba(239, 68, 68, 0.4); }
 .pill.grey { background-color: rgba(107, 114, 128, 0.4); }
+
+/* Legend container */
+.legend {
+  margin-top: 1rem;
+  padding: .75rem .9rem;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 10px;
+  color: #fff;
+
+  font-size: .95rem;
+  line-height: 1.55;
+  letter-spacing: .2px;
+  max-width: 680px;     
+  margin-inline: 0;     
+}
+
+/* Heading */
+.legend-title {
+  margin: 0 0 .6rem;
+  font-size: 1rem;
+  line-height: 1.4;
+  font-weight: 700;
+  text-align: left;    
+}
+
+/* List layout */
+.legend-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: .6rem;
+}
+
+
+.legend-item {
+  display: grid;
+  grid-template-columns: 14px 1fr;  
+  align-items: start;               
+  column-gap: .6rem;
+}
+
+/* Color dot */
+.pill-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  margin-top: .35rem;              
+  box-shadow: inset 0 1px 2px rgba(255,255,255,.25), 0 1px 2px rgba(0,0,0,.15);
+  border: 1px solid rgba(255,255,255,.25);
+}
+
+/* Text block */
+.legend-content {
+  display: grid;
+  gap: .15rem;                      
+}
+
+.legend-line {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+.legend-badge {
+  font-weight: 700;
+  color: #fff;
+}
+
+.legend-desc {
+  color: rgba(255,255,255,.86);
+  font-weight: 400;
+  line-height: 1.55;
+  text-align: left;
+}
+
+/* Colors */
+.pill-dot.green  { background-color: rgba(22, 163, 74, 0.9); }
+.pill-dot.yellow { background-color: rgba(255, 215, 0, 0.9); }
+.pill-dot.red    { background-color: rgba(239, 68, 68, 0.9); }
+.pill-dot.grey   { background-color: rgba(107, 114, 128, 0.9); }
+
+/* Mobile tweaks */
+@media (max-width: 480px) {
+  .legend       { font-size: .9rem; padding: .65rem .8rem; }
+  .legend-list  { gap: .5rem; }
+  .legend-desc  { line-height: 1.5; }
+}
+
+
+.legend-item:first-child .legend-badge { text-shadow: 0 0 6px rgba(16,185,129,.25); }
+.legend-item:first-child .legend-desc  { color: #e9ffe9; }
+
 </style>
