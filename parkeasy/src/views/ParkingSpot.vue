@@ -40,7 +40,8 @@ const showResults = ref(false)
  * API Configuration
  * - API_BASE: backend API base URL
  */
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+const API_BASE = import.meta.env.VITE_API_URL || 'https://fit5120-t13-project.onrender.com';
+
 
 /**
  * Dropdown Options
