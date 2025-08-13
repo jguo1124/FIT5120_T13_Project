@@ -12,7 +12,7 @@ import { ref, computed } from 'vue'
  * - ResultsDrawer: slide-out panel for displaying results
  */
 import SearchForm from '@/components/SearchForm.vue'
-import ResultsDrawer from '@/components/ResultsDrawer.vue'
+import ResultsDrawer from '@/components/ResultsDrawer/ResultsDrawer.vue'
 
 /**
  * Form State
@@ -22,7 +22,19 @@ import ResultsDrawer from '@/components/ResultsDrawer.vue'
  */
 const selectedDay = ref(null)
 const selectedTime = ref(null)
-const postcode = ref('')
+const selectedPostcode = ref(null)
+const cityPostcodes = [
+  { label: 'Melbourne CBD (3000)', value: '3000' },
+  { label: 'East Melbourne (3002)', value: '3002' },
+  { label: 'West Melbourne (3003)', value: '3003' },
+  { label: 'St Kilda Rd, Melbourne (3004)', value: '3004' },
+  { label: 'Southbank / South Wharf (3006)', value: '3006' },
+  { label: 'Docklands (3008)', value: '3008' },
+  { label: 'Kensington (3031)', value: '3031' },
+  { label: 'North Melbourne (3051)', value: '3051' },
+  { label: 'Parkville (3052)', value: '3052' },
+  { label: 'Carlton (3053)', value: '3053' },
+]
 
 /**
  * Backend and UI State
@@ -40,8 +52,7 @@ const showResults = ref(false)
  * API Configuration
  * - API_BASE: backend API base URL
  */
-const API_BASE = import.meta.env.VITE_API_URL || 'https://fit5120-t13-project.onrender.com';
-
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
 /**
  * Dropdown Options
@@ -113,7 +124,7 @@ const mapDirectionsUrl = (r) => {
  * - Updates results state
  */
 const handleSubmit = async () => {
-  if (!selectedDay.value || !selectedTime.value || !postcode.value) {
+  if (!selectedDay.value || !selectedTime.value || !selectedPostcode.value) {
     alert('Please complete all fields.')
     return
   }
@@ -129,7 +140,7 @@ const handleSubmit = async () => {
       body: JSON.stringify({
         day: selectedDay.value,
         time: selectedTime.value,
-        postcode: postcode.value
+        postcode: selectedPostcode.value
       })
     })
     const data = await resp.json()
@@ -155,7 +166,7 @@ const closeResults = () => { showResults.value = false }
       <h1 class="brand-title">ParkEasy</h1>
       <h2 class="brand-subtitle">Find Your Spot, Stress-Free</h2>
       <p class="brand-description">
-        In the bustling Melbourne CBD, finding a parking spot no longer needs to be stressful.
+        
         ParkEasy uses smart recommendations to save you time, reduce congestion and carbon emissions,
         making every journey easier and more eco-friendly.
       </p>
@@ -166,7 +177,8 @@ const closeResults = () => { showResults.value = false }
     <SearchForm
       v-model:selectedDay="selectedDay"
       v-model:selectedTime="selectedTime"
-      v-model:postcode="postcode"
+      v-model:selectedPostcode="selectedPostcode"
+      :postcodes="cityPostcodes"
       :days="days"
       :timeSlots="timeSlots"
       :loading="loading"
@@ -176,9 +188,9 @@ const closeResults = () => { showResults.value = false }
       <!-- Summary Slot -->
       <!-- Displays chosen day, time, and postcode -->
       <template #summary>
-        <div v-if="selectedDay && selectedTime && postcode" class="summary">
+        <div v-if="selectedDay && selectedTime && selectedPostcode" class="summary">
           You selected: <strong>{{ selectedDay }}</strong> at
-          <strong>{{ selectedTime }}</strong>, Postcode: <strong>{{ postcode }}</strong>
+          <strong>{{ selectedTime }}</strong>, Postcode: <strong>{{ selectedPostcode }}</strong>
         </div>
       </template>
     </SearchForm>
@@ -206,7 +218,7 @@ const closeResults = () => { showResults.value = false }
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: url("@/assets/background.jpg") no-repeat center center/cover;
+  background: url("@/assets/3.jpeg") no-repeat center center/cover;
   padding: 2rem;
   box-sizing: border-box;
   color: #fff;
